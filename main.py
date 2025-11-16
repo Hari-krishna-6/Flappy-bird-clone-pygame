@@ -41,7 +41,7 @@ class Bird(pygame.sprite.Sprite):
         
         if keys[pygame.K_SPACE] and self.pressed == 0:
             self.pressed = 1
-            self.gravity = -10
+            self.gravity = -9
 
         if not keys[pygame.K_SPACE]:
             self.pressed = 0
@@ -49,8 +49,8 @@ class Bird(pygame.sprite.Sprite):
         #gravity
         if flying == 1:
             self.gravity+=0.5
-            if self.gravity>8:
-                self.gravity = 8
+            if self.gravity>9:
+                self.gravity = 9
             self.rect.y += int(self.gravity)
             if self.rect.bottom >=490:
                 self.rect.bottom = 490
@@ -109,6 +109,7 @@ class Button():
     
 #variables
 
+scoreflag = False
 score = 0
 pass_pipe = False 
 FPS = 60
@@ -159,6 +160,7 @@ while run:
     if ground_pos <= -Width:
         ground_pos = 0
     
+    
     #score
 
     if len(pipe_group) > 0:
@@ -181,7 +183,8 @@ while run:
     if paravai.rect.bottom >= 490:
         gameover = 1
         flying = 0
-
+    if gameover ==0 and flying ==0:
+        draw_text("PRESS SPACE TO START" , font , (225,225,225), 185 ,500)
     if gameover == 0 and flying == 1:
         time_now = pygame.time.get_ticks()
         if time_now - last_pipe > time_gap:
@@ -193,12 +196,13 @@ while run:
             last_pipe = time_now
         ground_pos -= move_speed
         pipe_group.update()
-
+    if score>highscore:
+        highscore = score
+        scoreflag=True
     if gameover==1:
         screen.blit(end,((Width/2) - 150,(Height/2) -185))
 
-        if score>highscore:
-            highscore = score
+        if scoreflag:
             fh = open("highscore.txt","w")
             fh.write(str(highscore))
             fh.close()
