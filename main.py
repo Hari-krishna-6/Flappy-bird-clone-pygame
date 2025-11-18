@@ -99,6 +99,8 @@ class Button():
     
     def draw(self):
         action  = False
+        if pygame.key.get_pressed()[pygame.K_RETURN] or pygame.key.get_pressed()[pygame.K_SPACE]:
+            action = True
         pos = pygame.mouse.get_pos()
         if self.rect.collidepoint(pos):
             if pygame.mouse.get_pressed()[0] == 1:
@@ -215,8 +217,9 @@ while run:
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             run = False
-        if pygame.key.get_pressed()[pygame.K_SPACE] and flying == 0 and gameover == 0:
-            flying = 1
+        if event.type == pygame.KEYDOWN:
+            if  event.key == pygame.K_SPACE and flying == 0 and gameover == 0:
+                flying = 1
 
     pygame.display.update()
 pygame.quit()
