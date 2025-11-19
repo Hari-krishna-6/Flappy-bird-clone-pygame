@@ -19,6 +19,27 @@ def reset():
     pipe_group.empty()
     return score
 
+difficulty = "Easy"   
+
+def set_difficulty(level):
+    global move_speed, pipe_gap, time_gap, difficulty
+    difficulty = level
+
+    if level == "Easy":
+        move_speed = 3
+        pipe_gap  = 180
+        time_gap  = 1800  
+
+    elif level == "Medium":
+        move_speed = 4
+        pipe_gap  = 150
+        time_gap  = 1500
+
+    elif level == "Hard":
+        move_speed = 5
+        pipe_gap  = 120
+        time_gap  = 1200
+
 class Bird(pygame.sprite.Sprite):
     def __init__(self,x,y):
         pygame.sprite.Sprite.__init__(self)
@@ -109,6 +130,20 @@ class Button():
         screen.blit(self.image, (self.rect.x,self.rect.y))
         return action
     
+class MenuButton():
+    def __init__(self, x, y, image):
+        self.image = image
+        self.rect = self.image.get_rect(center=(x, y))
+
+    def draw(self):
+        screen.blit(self.image, self.rect)
+        # Highlight on hover
+        if self.rect.collidepoint(pygame.mouse.get_pos()):
+            pygame.draw.rect(screen, (255,255,0), self.rect, 3) 
+            if pygame.mouse.get_pressed()[0]:
+                return True
+        return False
+
 #variables
 
 scoreflag = False
@@ -137,6 +172,16 @@ ground = pygame.image.load('Ground.png')
 button_img = pygame.image.load('restart.png')
 screen = pygame.display.set_mode((Width , Height))
 pygame.display.set_caption('Vaaga guys')
+easy_img = pygame.image.load("1.png")
+med_img  = pygame.image.load("2.png")
+hard_img = pygame.image.load("3.png")
+easy_img = pygame.transform.scale(easy_img, (150,150))
+med_img  = pygame.transform.scale(med_img,  (150,150))
+hard_img = pygame.transform.scale(hard_img, (150,150))
+easy_btn  = MenuButton(200, 300, easy_img)
+med_btn   = MenuButton(400, 300, med_img)
+hard_btn  = MenuButton(600, 300, hard_img)
+
 
 #characters group
 
@@ -147,9 +192,35 @@ paravai = Bird(120 , int(Height/2))
 bird_group.add(paravai)
 button = Button((Width // 2)-10, 400 , button_img)
 
-#runner
-
+#Difficulty
 run = True
+selecting = True
+while selecting:
+    screen.blit(bg,(0,0))
+    draw_text("SELECT DIFFICULTY", font, (255, 255, 255), 220, 100)
+
+    # Draw buttons
+    if easy_btn.draw():
+        set_difficulty("Easy")
+        selecting = False
+
+    if med_btn.draw():
+        set_difficulty("Medium")
+        selecting = False
+
+    if hard_btn.draw():
+        set_difficulty("Hard")
+        selecting = False
+
+    pygame.display.update()
+
+    for event in pygame.event.get():
+        if event.type == pygame.QUIT:
+            selecting = False
+            run = False
+
+#runner
+            
 while run:
     clock.tick(FPS)
 
