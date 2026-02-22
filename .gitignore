@@ -19,6 +19,9 @@ highscore.txt
 .DS_Store
 Thumbs.db
 
+#end image
+end.jpg
+
 # IDE / Editor settings (if using VSCode, PyCharm, etc.)
 .vscode/
 .idea/
